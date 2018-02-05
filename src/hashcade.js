@@ -2,9 +2,11 @@ const js_sha3 = require('js-sha3')
 const js_sha512 = require('js-sha512')
 const js_sha256 = require('js-sha256')
 
-var Hashcade = (function() {
-	var module = {}
+let hashcade = (function() {
+	let module = {}
 	module.debug = false
+
+	let shasharr = ['1', '2', '6', 'c']
 	
 	module.hash = (data, hashcade) => {
 		if (!(data instanceof Buffer)) {
@@ -24,8 +26,8 @@ var Hashcade = (function() {
 		}
 
 		let hashcade_str = hashcade.toString('hex')
-		let shasharr = ['1', '2', '6', 'c']
-
+		
+		debug("Input: " + data.toString())
 		debug("Hashcade pre: " + hashcade_str)
 
 		if (shasharr.indexOf(hashcade_str[hashcade_str.length - 1]) == -1) {
@@ -51,9 +53,6 @@ var Hashcade = (function() {
 			debug("")
 			debug("Round " + (i + 1))
 			debug("")
-			debug("d: " + data.toString('hex'))
-			debug("h: " + hashcade.toString('hex'))
-			debug("r: " + ret)
 
 			let input = Buffer.concat([data, hashcade, new Buffer(ret)])
 
@@ -61,72 +60,75 @@ var Hashcade = (function() {
 				case '0':
 					debug("Algorithm: shake123-256")
 					ret = js_sha3.shake128(input, 256)
-					break;
+					break
 				case '1':
 					debug("Algorithm: shake256-512")
 					ret = js_sha3.shake256(input, 512)
-					break;
+					break
 				case '2':
 					debug("Algorithm: keccak512")
 					ret = js_sha3.keccak512(input)
-					break;
+					break
 				case '3':
 					debug("Algorithm: keccak384")
 					ret = js_sha3.keccak384(input)
-					break;
+					break
 				case '4':
 					debug("Algorithm: keccak256")
 					ret = js_sha3.keccak256(input)
-					break;
+					break
 				case '5':
 					debug("Algorithm: keccak224")
 					ret = js_sha3.keccak224(input)
-					break;
+					break
 				case '6':
 					debug("Algorithm: sha3_512")
 					ret = js_sha3.sha3_512(input)
-					break;
+					break
 				case '7':
 					debug("Algorithm: sha3_384")
 					ret = js_sha3.sha3_384(input)
-					break;
+					break
 				case '8':
 					debug("Algorithm: sha3_256")
 					ret = js_sha3.sha3_256(input)
-					break;
+					break
 				case '9':
 					debug("Algorithm: sha3_224")
 					ret = js_sha3.sha3_224(input)
-					break;
+					break
 				case 'a':
 					debug("Algorithm: sha512_256")
 					ret = js_sha512.sha512_256(input)
-					break;
+					break
 				case 'b':
 					debug("Algorithm: sha512_224")
 					ret = js_sha512.sha512_224(input)
-					break;
+					break
 				case 'c':
 					debug("Algorithm: sha512")
 					ret = js_sha512.sha512(input)
-					break;
+					break
 				case 'd':
 					debug("Algorithm: sha384")
 					ret = js_sha512.sha384(input)
-					break;
+					break
 				case 'e':
 					debug("Algorithm: sha256")
 					ret = js_sha256.sha256(input)
-					break;
+					break
 				case 'f':
 					debug("Algorithm: sha224")
 					ret = js_sha256.sha224(input)
-					break;
+					break
 			}
 
-			debug("OUT: " + ret)
-			debug("")
+			debug("OUT: " + ret + "\n")
 		}
+
+		debug("--------------------")
+		debug("Generated hash: " + ret)
+		debug("--------------------\n")
 
 		return ret
 	}
@@ -142,7 +144,7 @@ var Hashcade = (function() {
 		process.exit(-1)
 	}
 
-    return module;
+    return module
 })()
 
-module.exports = Hashcade
+module.exports = hashcade
