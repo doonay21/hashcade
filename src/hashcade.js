@@ -1,36 +1,100 @@
 const js_sha3 = require('js-sha3')
 const js_sha512 = require('js-sha512')
 const js_sha256 = require('js-sha256')
+const js_crc = require('js-crc')
 
 let hashcade = (function() {
 	let module = {}
 	module.debug = false
 
-	let shasharr = ['1', '2', '6', 'c']
+	const finalizers = {
+		224: ['5', '9', 'b', 'f'],
+		256: ['0', '4', '8', 'a', 'e'],
+		384: ['3', '7', 'd'],
+		512: ['1', '2', '6', 'c']
+	}
 	
-	module.hash = (data, hashcade) => {
+	module.fullHash = (data, hashcade, output_size) => {
 		if (!(data instanceof Buffer)) {
-			e("Parameter 'data': is not Buffer!")
+			error("Parameter 'data': is not Buffer!")
 		}
 
 		if (!(hashcade instanceof Buffer)) {
-			e("Parameter 'hashcade': is not Buffer!")
+			error("Parameter 'hashcade': is not Buffer!")
 		}
 
 		if (data.length < 1) {
-			e("Parameter 'data': is empty!")
+			error("Parameter 'data': is empty!")
 		}
 
 		if (hashcade.length < 1) {
-			e("Parameter 'hashcade': is empty!")
+			error("Parameter 'hashcade': is empty!")
 		}
 
+		return hash(data, hashcade, output_size)
+	}
+
+	module.secureTiny16 = (data, hashcade) => {
+		if (!(data instanceof Buffer)) {
+			error("Parameter 'data': is not Buffer!")
+		}
+
+		if (!(hashcade instanceof Buffer)) {
+			error("Parameter 'hashcade': is not Buffer!")
+		}
+
+		if (data.length < 1) {
+			error("Parameter 'data': is empty!")
+		}
+
+		if (hashcade.length < 1) {
+			error("Parameter 'hashcade': is empty!")
+		}
+
+		// ToDo crc 16
+
+		return hash(data, hashcade, output_size)
+	}
+
+	module.secureTiny16 = (data, hashcade) => {
+		// ToDo crc 32
+	}
+
+	module.simplified224 = data => {
+		return module.simplified(data, 224)
+	}
+
+	module.simplified256 = data => {
+		return module.simplified(data, 256)
+	}
+
+	module.simplified384 = data => {
+		return module.simplified(data, 384)
+	}
+
+	module.simplified512 = data => {
+		return module.simplified(data, 512)
+	}
+
+	module.simplified = (data, output_size) => {
+		if (!(data instanceof Buffer)) {
+			error("Parameter 'data': is not Buffer!")
+		}
+
+		if (data.length < 1) {
+			error("Parameter 'data': is empty!")
+		}
+
+		return hash(data, new Buffer(js_sha3.keccak512(data.toString()), 'hex'), output_size)
+	}
+
+	function hash(data, hashcade, output_size) {
 		let hashcade_str = hashcade.toString('hex')
 		
 		debug("Input: " + data.toString())
 		debug("Hashcade pre: " + hashcade_str)
 
-		if (shasharr.indexOf(hashcade_str[hashcade_str.length - 1]) == -1) {
+		if (finalizers[output_size].indexOf(hashcade_str[hashcade_str.length - 1]) == -1) {
 			let data_hash = js_sha3.keccak512(data.toString('hex'))
 			let sum = 0
 
@@ -38,7 +102,7 @@ let hashcade = (function() {
 				sum += data_hash[i].charCodeAt(0)
 			}
 
-			hashcade_str += shasharr[sum % 4]
+			hashcade_str += finalizers[output_size][sum % 4]
 
 			debug("Finalizer generated")
 		}
@@ -133,14 +197,14 @@ let hashcade = (function() {
 		return ret
 	}
 
-	function debug(d) {
+	function debug(text) {
 		if (module.debug) {
-			console.log(d)
+			console.log(text)
 		}
 	}
 
-	function e(d) {
-		console.log(d)
+	function error(text) {
+		console.log(text)
 		process.exit(-1)
 	}
 
