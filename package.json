@@ -1,0 +1,33 @@
+{
+  "name": "hashcade",
+  "version": "0.0.1",
+  "description": "Powerfull cascade hashing library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doonay21/hashcade.git"
+  },
+  "keywords": [
+    "hash",
+    "hashing",
+    "library",
+    "sha",
+    "sha256",
+    "sha3",
+    "sha2",
+    "sha512",
+    "keccak",
+    "security",
+    "cyrpto"
+  ],
+  "author": "Rafal Dunajski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doonay21/hashcade/issues"
+  },
+  "homepage": "https://github.com/doonay21/hashcade#readme",
+  "dependencies": {
+    "js-sha256": "^0.9.0",
+    "js-sha3": "^0.7.0",
+    "js-sha512": "^0.7.1"
+  }
+}
