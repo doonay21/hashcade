@@ -1,6 +1,6 @@
 {
   "name": "hashcade",
-  "version": "0.0.1",
+  "version": "0.1",
   "description": "Powerfull cascade hashing library",
   "repository": {
     "type": "git",
