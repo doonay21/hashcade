@@ -1,7 +1,15 @@
-## Welcome to GitHub Pages
+<input type="text" id="input-1">
+<input type="text" id="input-2">
+<button onclick="showHash()">Show Hash</button>
+<div id="hash_result">
 
-You can use the [editor on GitHub](https://github.com/doonay21/hashcade/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+</div>
 
 <script>
-  alert(123);
+	function showHash() {
+		let input1 = $('#input-1').val()
+		let input2 = $('#input-2').val()
+
+		$('#hash_result').html(input1 + ', ' + input2)
+	}
 </script>
